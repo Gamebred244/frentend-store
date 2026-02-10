@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: frentend-store
+    env: docker
+    plan: free
+    autoDeploy: true
+    envVars:
+      - key: BACKEND_URL
+        value: https://hygene-store-api.onrender.com

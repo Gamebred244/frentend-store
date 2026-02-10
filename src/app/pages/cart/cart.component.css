@@ -188,17 +188,6 @@ main {
   gap: 10px;
 }
 
-.paypal-note input {
-  border: 1px solid #c9c9d1;
-  border-radius: 10px;
-  padding: 10px;
-  font-size: 14px;
-  width: 100%;
-}
-
-.paypal-buttons {
-  margin-top: 8px;
-}
 
 .modal-actions {
   display: flex;

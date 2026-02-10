@@ -49,14 +49,7 @@
     <h2>Checkout</h2>
     <p class="muted">Select a payment method and enter your details.</p>
     <div class="payment-options">
-      <label class="option">
-        <input type="radio" name="payment" [(ngModel)]="paymentMethod" value="card" (change)="onPaymentMethodChange()" />
-        <span>Mastercard / Visa</span>
-      </label>
-      <label class="option">
-        <input type="radio" name="payment" [(ngModel)]="paymentMethod" value="paypal" (change)="onPaymentMethodChange()" />
-        <span>PayPal</span>
-      </label>
+      <span class="option">Mastercard / Visa</span>
     </div>
 
     <div class="form-grid" *ngIf="paymentMethod === 'card'">
@@ -88,15 +81,10 @@
       </label>
     </div>
 
-    <div class="paypal-note" *ngIf="paymentMethod === 'paypal'">
-      <p class="muted">You will be redirected to PayPal to complete the payment.</p>
-      <div #paypalButtons class="paypal-buttons"></div>
-    </div>
-
     <div class="error" *ngIf="checkoutStatus">{{ checkoutStatus }}</div>
     <div class="modal-actions">
       <button class="btn ghost" type="button" (click)="closeCheckout()">Cancel</button>
-      <button class="btn" type="button" *ngIf="paymentMethod === 'card'" (click)="submitCheckout()">Pay</button>
+      <button class="btn" type="button" (click)="submitCheckout()">Pay</button>
     </div>
   </div>
 </div>
