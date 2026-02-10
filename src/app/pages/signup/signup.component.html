@@ -1,0 +1,20 @@
+<div class="page">
+  <div class="login-card">
+    <h1>Create Account</h1>
+    <p>Join the hygiene store to save your cart.</p>
+    <form (ngSubmit)="signup()">
+      <label for="username">Username</label>
+      <input id="username" name="username" [(ngModel)]="username" type="text" autocomplete="username" required />
+
+      <label for="email">Email</label>
+      <input id="email" name="email" [(ngModel)]="email" type="email" autocomplete="email" required />
+
+      <label for="password">Password</label>
+      <input id="password" name="password" [(ngModel)]="password" type="password" autocomplete="new-password" required />
+
+      <button type="submit">Sign up</button>
+    </form>
+    <div class="error" *ngIf="errorMessage">{{ errorMessage }}</div>
+    <div class="hint">Already have an account? <a routerLink="/login">Sign in</a></div>
+  </div>
+</div>

@@ -1,0 +1,102 @@
+<header>
+  <div class="nav">
+    <a class="brand" routerLink="/">HygieneMarket</a>
+    <div>
+      <a class="pill" routerLink="/">Shop</a>
+      <a class="pill user-pill" *ngIf="currentUser" routerLink="/profile">
+        {{ currentUser.username }} ({{ currentUser.role }})
+      </a>
+      <button class="pill" type="button" *ngIf="currentUser" (click)="logout()">Logout</button>
+      <a class="pill" routerLink="/login" *ngIf="!currentUser">Sign in</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section>
+    <h1>Your Cart</h1>
+    <p class="muted" *ngIf="statusText">{{ statusText }}</p>
+  </section>
+
+  <section class="cart-grid" *ngIf="cart">
+    <div class="item" *ngFor="let item of cart.items">
+      <img [src]="item.imageUrl || placeholderImage" [alt]="item.productName" (error)="onImageError($event)" />
+      <div class="item-info">
+        <strong>{{ item.productName }}</strong>
+        <span class="muted">Unit: {{ cart.currency }} {{ item.unitPrice }}</span>
+        <span class="muted">Line: {{ cart.currency }} {{ item.lineTotal }}</span>
+      </div>
+      <div class="item-actions">
+        <div class="qty">
+          <button type="button" (click)="updateQty(item.id, item.productId, item.quantity - 1)">-</button>
+          <span>{{ item.quantity }}</span>
+          <button type="button" (click)="updateQty(item.id, item.productId, item.quantity + 1)">+</button>
+        </div>
+        <button class="pill" type="button" (click)="removeItem(item.id)">Remove</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="summary" *ngIf="cart">
+    <div class="muted">Total</div>
+    <strong>{{ cart.currency }} {{ cart.total | number: '1.2-2' }}</strong>
+    <button class="btn" type="button" (click)="openCheckout()">Checkout</button>
+  </section>
+</main>
+
+<div class="modal-backdrop" *ngIf="showCheckout">
+  <div class="modal">
+    <h2>Checkout</h2>
+    <p class="muted">Select a payment method and enter your details.</p>
+    <div class="payment-options">
+      <label class="option">
+        <input type="radio" name="payment" [(ngModel)]="paymentMethod" value="card" (change)="onPaymentMethodChange()" />
+        <span>Mastercard / Visa</span>
+      </label>
+      <label class="option">
+        <input type="radio" name="payment" [(ngModel)]="paymentMethod" value="paypal" (change)="onPaymentMethodChange()" />
+        <span>PayPal</span>
+      </label>
+    </div>
+
+    <div class="form-grid" *ngIf="paymentMethod === 'card'">
+      <label>
+        Full name
+        <input [(ngModel)]="checkout.fullName" type="text" />
+      </label>
+      <label>
+        Email
+        <input [(ngModel)]="checkout.email" type="email" />
+      </label>
+      <label>
+        Card number
+        <input [(ngModel)]="checkout.cardNumber" type="text" maxlength="19" placeholder="1234 5678 9012 3456" />
+      </label>
+      <div class="row">
+        <label>
+          Expiry
+          <input [(ngModel)]="checkout.expiry" type="text" placeholder="MM/YY" />
+        </label>
+        <label>
+          CVC
+          <input [(ngModel)]="checkout.cvc" type="text" maxlength="4" />
+        </label>
+      </div>
+      <label>
+        Billing address
+        <input [(ngModel)]="checkout.billingAddress" type="text" />
+      </label>
+    </div>
+
+    <div class="paypal-note" *ngIf="paymentMethod === 'paypal'">
+      <p class="muted">You will be redirected to PayPal to complete the payment.</p>
+      <div #paypalButtons class="paypal-buttons"></div>
+    </div>
+
+    <div class="error" *ngIf="checkoutStatus">{{ checkoutStatus }}</div>
+    <div class="modal-actions">
+      <button class="btn ghost" type="button" (click)="closeCheckout()">Cancel</button>
+      <button class="btn" type="button" *ngIf="paymentMethod === 'card'" (click)="submitCheckout()">Pay</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Cart</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Work+Sans:wght@400;500;600&display=swap");
+
+      :root {
+        --ink: #1f1f1f;
+        --muted: #5f6671;
+        --cream: #f7f2ea;
+        --mist: #edf3f4;
+        --primary: #0a6b5a;
+        --accent: #f06c4f;
+        --card: #ffffff;
+        --shadow: 0 18px 45px rgba(20, 20, 20, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Work Sans", "Trebuchet MS", sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 10% 10%, rgba(10, 107, 90, 0.08), transparent 60%),
+          radial-gradient(circle at 90% 20%, rgba(240, 108, 79, 0.12), transparent 60%),
+          linear-gradient(120deg, var(--cream), var(--mist));
+        min-height: 100vh;
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        background: rgba(247, 242, 234, 0.92);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(20, 20, 20, 0.08);
+      }
+
+      .nav {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 16px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .brand {
+        font-family: "Libre Baskerville", serif;
+        font-size: 22px;
+      }
+
+      .pill {
+        padding: 8px 14px;
+        border-radius: 999px;
+        background: #fff;
+        border: 1px solid rgba(20, 20, 20, 0.12);
+        font-size: 13px;
+      }
+
+      main {
+        max-width: 1100px;
+        margin: 40px auto;
+        padding: 0 24px;
+        display: grid;
+        gap: 24px;
+      }
+
+      .cart-grid {
+        display: grid;
+        gap: 16px;
+      }
+
+      .item {
+        background: var(--card);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        display: grid;
+        gap: 16px;
+        grid-template-columns: 120px 1fr auto;
+        padding: 16px;
+        align-items: center;
+      }
+
+      .item img {
+        width: 100%;
+        height: 90px;
+        object-fit: cover;
+        border-radius: 12px;
+      }
+
+      .item-info {
+        display: grid;
+        gap: 6px;
+      }
+
+      .item-actions {
+        display: grid;
+        gap: 8px;
+        align-items: center;
+        justify-items: end;
+      }
+
+      .qty {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .qty button {
+        border: none;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #f2f2f2;
+        cursor: pointer;
+      }
+
+      .summary {
+        background: var(--card);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        padding: 18px;
+        display: grid;
+        gap: 10px;
+      }
+
+      .summary strong {
+        font-size: 18px;
+      }
+
+      .btn {
+        border: none;
+        border-radius: 10px;
+        padding: 12px 16px;
+        font-size: 14px;
+        cursor: pointer;
+        background: var(--primary);
+        color: #fff;
+      }
+
+      .muted {
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 800px) {
+        .item {
+          grid-template-columns: 1fr;
+        }
+        .item-actions {
+          justify-items: start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="nav">
+        <div class="brand">HygieneMarket</div>
+        <div>
+          <a class="pill" href="/">Shop</a>
+          <a class="pill" href="/login">Sign in</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section>
+        <h1>Your Cart</h1>
+        <p class="muted" id="statusText">Loading cart...</p>
+      </section>
+      <section class="cart-grid" id="cartGrid"></section>
+      <section class="summary">
+        <div class="muted">Total</div>
+        <strong id="totalPrice">$0.00</strong>
+        <button class="btn" type="button">Checkout</button>
+      </section>
+    </main>
+
+    <script>
+      const cartGrid = document.getElementById("cartGrid");
+      const statusText = document.getElementById("statusText");
+      const totalPrice = document.getElementById("totalPrice");
+
+      let cartId = localStorage.getItem("cartId");
+
+      async function api(path, options = {}) {
+        const response = await fetch(path, {
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          ...options,
+        });
+        if (!response.ok) {
+          const body = await response.json().catch(() => ({}));
+          throw new Error(body.message || "Request failed");
+        }
+        return response.json();
+      }
+
+      async function ensureCart() {
+        if (cartId) {
+          return cartId;
+        }
+        const cart = await api("/api/carts", { method: "POST" });
+        cartId = cart.id;
+        localStorage.setItem("cartId", cartId);
+        return cartId;
+      }
+
+      async function loadCart() {
+        try {
+          const id = await ensureCart();
+          const cart = await api(`/api/carts/${id}`);
+          renderCart(cart);
+        } catch (err) {
+          statusText.textContent = "Please sign in to view your cart.";
+        }
+      }
+
+      function renderCart(cart) {
+        cartGrid.innerHTML = "";
+        statusText.textContent = cart.items.length ? "" : "Your cart is empty.";
+        totalPrice.textContent = `${cart.currency} ${cart.total.toFixed(2)}`;
+
+        cart.items.forEach((item) => {
+          const row = document.createElement("div");
+          row.className = "item";
+          row.innerHTML = `
+            <img src="${item.imageUrl}" alt="${item.productName}" />
+            <div class="item-info">
+              <strong>${item.productName}</strong>
+              <span class="muted">Unit: ${cart.currency} ${item.unitPrice}</span>
+              <span class="muted">Line: ${cart.currency} ${item.lineTotal}</span>
+            </div>
+            <div class="item-actions">
+              <div class="qty">
+                <button type="button" data-action="dec">-</button>
+                <span>${item.quantity}</span>
+                <button type="button" data-action="inc">+</button>
+              </div>
+              <button class="pill" type="button" data-action="remove">Remove</button>
+            </div>
+          `;
+          const [decBtn, incBtn] = row.querySelectorAll("[data-action]");
+          row.querySelector("[data-action='dec']").addEventListener("click", () => updateQty(cart.id, item, -1));
+          row.querySelector("[data-action='inc']").addEventListener("click", () => updateQty(cart.id, item, 1));
+          row.querySelector("[data-action='remove']").addEventListener("click", () => removeItem(cart.id, item));
+          cartGrid.appendChild(row);
+        });
+      }
+
+      async function updateQty(cartIdValue, item, delta) {
+        const nextQty = item.quantity + delta;
+        if (nextQty <= 0) {
+          await removeItem(cartIdValue, item);
+          return;
+        }
+        await api(`/api/carts/${cartIdValue}/items/${item.id}`, {
+          method: "PUT",
+          body: JSON.stringify({ productId: item.productId, quantity: nextQty }),
+        });
+        loadCart();
+      }
+
+      async function removeItem(cartIdValue, item) {
+        await api(`/api/carts/${cartIdValue}/items/${item.id}`, { method: "DELETE" });
+        loadCart();
+      }
+
+      loadCart();
+    </script>
+  </body>
+</html>

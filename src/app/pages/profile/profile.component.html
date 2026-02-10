@@ -1,0 +1,32 @@
+<header>
+  <div class="nav">
+    <div class="brand">HygieneMarket</div>
+    <div>
+      <a class="pill" routerLink="/">Shop</a>
+      <a class="pill" routerLink="/cart">Cart</a>
+      <a class="pill" routerLink="/login" *ngIf="!currentUser">Sign in</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="profile-card">
+    <h1>Your Profile</h1>
+    <p class="muted" *ngIf="statusText">{{ statusText }}</p>
+    <div class="details" *ngIf="currentUser">
+      <div>
+        <span class="label">Username</span>
+        <strong>{{ currentUser.username }}</strong>
+      </div>
+      <div>
+        <span class="label">Email</span>
+        <strong>{{ currentUser.email }}</strong>
+      </div>
+      <div>
+        <span class="label">Role</span>
+        <strong>{{ currentUser.role }}</strong>
+      </div>
+      <div class="hint">Orders and address management can be added next.</div>
+    </div>
+  </section>
+</main>

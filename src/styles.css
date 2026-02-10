@@ -1,0 +1,32 @@
+@import url("https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Work+Sans:wght@400;500;600&display=swap");
+
+:root {
+  --ink: #1f1f1f;
+  --muted: #5f6671;
+  --cream: #f7f2ea;
+  --mist: #edf3f4;
+  --primary: #0a6b5a;
+  --accent: #f06c4f;
+  --card: #ffffff;
+  --shadow: 0 18px 45px rgba(20, 20, 20, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Work Sans", "Trebuchet MS", sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 10% 10%, rgba(10, 107, 90, 0.08), transparent 60%),
+    radial-gradient(circle at 90% 20%, rgba(240, 108, 79, 0.12), transparent 60%),
+    linear-gradient(120deg, var(--cream), var(--mist));
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}

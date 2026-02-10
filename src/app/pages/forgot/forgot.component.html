@@ -1,0 +1,14 @@
+<div class="page">
+  <div class="login-card">
+    <h1>Reset Password</h1>
+    <p>Enter your email to receive a reset link.</p>
+    <form (ngSubmit)="submit()">
+      <label for="email">Email</label>
+      <input id="email" name="email" [(ngModel)]="email" type="email" autocomplete="email" required />
+      <button type="submit">Send reset link</button>
+    </form>
+    <div class="status" *ngIf="statusText">{{ statusText }}</div>
+    <div class="error" *ngIf="errorText">{{ errorText }}</div>
+    <div class="hint">Back to <a routerLink="/login">Sign in</a></div>
+  </div>
+</div>

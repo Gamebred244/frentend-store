@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hygiene Store</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Work+Sans:wght@400;500;600&display=swap");
+
+      :root {
+        --ink: #1f1f1f;
+        --muted: #5f6671;
+        --cream: #f7f2ea;
+        --mist: #edf3f4;
+        --primary: #0a6b5a;
+        --accent: #f06c4f;
+        --card: #ffffff;
+        --shadow: 0 18px 45px rgba(20, 20, 20, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Work Sans", "Trebuchet MS", sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 10% 10%, rgba(10, 107, 90, 0.08), transparent 60%),
+          radial-gradient(circle at 90% 20%, rgba(240, 108, 79, 0.12), transparent 60%),
+          linear-gradient(120deg, var(--cream), var(--mist));
+        min-height: 100vh;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: rgba(247, 242, 234, 0.92);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(20, 20, 20, 0.08);
+      }
+
+      .nav {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 16px 24px;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .brand {
+        font-family: "Libre Baskerville", serif;
+        font-size: 22px;
+        letter-spacing: 0.6px;
+      }
+
+      .brand span {
+        color: var(--accent);
+      }
+
+      .search {
+        display: flex;
+        align-items: center;
+        background: #fff;
+        border-radius: 999px;
+        overflow: hidden;
+        border: 1px solid rgba(20, 20, 20, 0.1);
+      }
+
+      .search input {
+        flex: 1;
+        border: none;
+        padding: 10px 16px;
+        font-size: 14px;
+        outline: none;
+      }
+
+      .search button {
+        border: none;
+        background: var(--primary);
+        color: #fff;
+        padding: 10px 18px;
+        cursor: pointer;
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .pill {
+        padding: 8px 14px;
+        border-radius: 999px;
+        background: #fff;
+        border: 1px solid rgba(20, 20, 20, 0.12);
+        font-size: 13px;
+      }
+
+      main {
+        max-width: 1200px;
+        margin: 40px auto 60px;
+        padding: 0 24px;
+        display: grid;
+        gap: 36px;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+        align-items: center;
+      }
+
+      .hero h1 {
+        font-family: "Libre Baskerville", serif;
+        font-size: clamp(30px, 4vw, 48px);
+        margin: 0 0 12px;
+      }
+
+      .hero p {
+        color: var(--muted);
+        line-height: 1.6;
+        margin: 0 0 20px;
+      }
+
+      .hero-card {
+        background: var(--card);
+        padding: 22px;
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        display: grid;
+        gap: 10px;
+      }
+
+      .hero-card .tag {
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 12px;
+        color: var(--primary);
+      }
+
+      .grid {
+        display: grid;
+        gap: 18px;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      }
+
+      .card {
+        background: var(--card);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        display: grid;
+        gap: 10px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 24px 55px rgba(20, 20, 20, 0.18);
+      }
+
+      .card img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+      }
+
+      .card-body {
+        padding: 16px;
+        display: grid;
+        gap: 8px;
+      }
+
+      .price {
+        font-weight: 600;
+        color: var(--primary);
+      }
+
+      .actions {
+        display: flex;
+        gap: 10px;
+      }
+
+      .btn {
+        border: none;
+        border-radius: 10px;
+        padding: 10px 12px;
+        font-size: 13px;
+        cursor: pointer;
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: #fff;
+      }
+
+      .btn-ghost {
+        background: #f2f2f2;
+        color: #1f1f1f;
+      }
+
+      .product-panel {
+        background: var(--card);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        padding: 24px;
+        display: none;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+        align-items: center;
+      }
+
+      .product-panel img {
+        width: 100%;
+        height: 240px;
+        object-fit: cover;
+        border-radius: 14px;
+      }
+
+      .status {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .fade-in {
+        animation: fadeInUp 0.8s ease both;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 900px) {
+        .nav {
+          grid-template-columns: 1fr;
+        }
+        .nav-actions {
+          justify-content: space-between;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="nav">
+        <div class="brand">Hygiene<span>Market</span></div>
+        <form class="search" id="searchForm">
+          <input id="searchInput" type="text" placeholder="Search shampoo, soap, toothpaste..." />
+          <button type="submit">Search</button>
+        </form>
+        <div class="nav-actions">
+          <a class="pill" href="/cart.html">Cart</a>
+          <a class="pill" href="/login">Sign in</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero fade-in">
+        <div>
+          <h1>Daily hygiene essentials, curated for comfort.</h1>
+          <p>Stock up on clean, skin-friendly products. Fast delivery, trusted brands, and gentle formulas.</p>
+          <button class="btn btn-primary" id="browseButton">Browse products</button>
+        </div>
+        <div class="hero-card">
+          <span class="tag">Featured</span>
+          <strong>Clean Care Kit</strong>
+          <span>Everyday essentials in one bundle.</span>
+        </div>
+      </section>
+
+      <section class="product-panel" id="productPanel">
+        <img id="panelImage" src="" alt="Product" />
+        <div>
+          <h2 id="panelName"></h2>
+          <p id="panelDescription" class="status"></p>
+          <div class="price" id="panelPrice"></div>
+          <div class="actions">
+            <button class="btn btn-primary" id="panelAdd">Add to cart</button>
+            <button class="btn btn-ghost" id="panelClose">Close</button>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Products</h2>
+        <p class="status" id="statusText">Loading products...</p>
+        <div class="grid" id="productGrid"></div>
+      </section>
+    </main>
+
+    <script>
+      const grid = document.getElementById("productGrid");
+      const statusText = document.getElementById("statusText");
+      const searchForm = document.getElementById("searchForm");
+      const searchInput = document.getElementById("searchInput");
+      const browseButton = document.getElementById("browseButton");
+
+      const panel = document.getElementById("productPanel");
+      const panelImage = document.getElementById("panelImage");
+      const panelName = document.getElementById("panelName");
+      const panelDescription = document.getElementById("panelDescription");
+      const panelPrice = document.getElementById("panelPrice");
+      const panelAdd = document.getElementById("panelAdd");
+      const panelClose = document.getElementById("panelClose");
+
+      let currentProduct = null;
+      let cartId = localStorage.getItem("cartId");
+
+      async function api(path, options = {}) {
+        const response = await fetch(path, {
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          ...options,
+        });
+        if (!response.ok) {
+          const body = await response.json().catch(() => ({}));
+          throw new Error(body.message || "Request failed");
+        }
+        return response.json();
+      }
+
+      async function ensureCart() {
+        if (cartId) {
+          return cartId;
+        }
+        const cart = await api("/api/carts", { method: "POST" });
+        cartId = cart.id;
+        localStorage.setItem("cartId", cartId);
+        return cartId;
+      }
+
+      function showPanel(product) {
+        currentProduct = product;
+        panelImage.src = product.imageUrl;
+        panelName.textContent = product.name;
+        panelDescription.textContent = product.description;
+        panelPrice.textContent = `${product.currency} ${product.price}`;
+        panel.style.display = "grid";
+        panel.scrollIntoView({ behavior: "smooth" });
+      }
+
+      function hidePanel() {
+        panel.style.display = "none";
+      }
+
+      async function addToCart(productId) {
+        try {
+          const id = await ensureCart();
+          await api(`/api/carts/${id}/items`, {
+            method: "POST",
+            body: JSON.stringify({ productId, quantity: 1 }),
+          });
+          alert("Added to cart.");
+        } catch (err) {
+          alert("Please sign in as user to add items.");
+        }
+      }
+
+      async function loadProducts(query = "") {
+        statusText.textContent = "Loading products...";
+        grid.innerHTML = "";
+        try {
+          const data = await api(`/api/products${query ? `?q=${encodeURIComponent(query)}` : ""}`, {
+            method: "GET",
+          });
+          if (!data.length) {
+            statusText.textContent = "No products found.";
+            return;
+          }
+          statusText.textContent = "";
+          data.forEach((product) => {
+            const card = document.createElement("div");
+            card.className = "card";
+            card.innerHTML = `
+              <img src="${product.imageUrl}" alt="${product.name}" />
+              <div class="card-body">
+                <strong>${product.name}</strong>
+                <span class="status">${product.category}</span>
+                <span class="price">${product.currency} ${product.price}</span>
+                <div class="actions">
+                  <button class="btn btn-primary">Add to cart</button>
+                  <button class="btn btn-ghost">Details</button>
+                </div>
+              </div>
+            `;
+            const [addBtn, detailBtn] = card.querySelectorAll("button");
+            addBtn.addEventListener("click", () => addToCart(product.id));
+            detailBtn.addEventListener("click", () => showPanel(product));
+            grid.appendChild(card);
+          });
+        } catch (err) {
+          statusText.textContent = "Unable to load products. Please sign in.";
+        }
+      }
+
+      searchForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        loadProducts(searchInput.value.trim());
+      });
+
+      browseButton.addEventListener("click", () => {
+        window.scrollTo({ top: grid.offsetTop - 20, behavior: "smooth" });
+      });
+
+      panelAdd.addEventListener("click", () => {
+        if (currentProduct) {
+          addToCart(currentProduct.id);
+        }
+      });
+      panelClose.addEventListener("click", hidePanel);
+
+      loadProducts();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,201 @@
+<header>
+  <div class="nav">
+    <a class="brand" routerLink="/">Hygiene<span>Market</span></a>
+    <form class="search" (submit)="onSearch()" autocomplete="off">
+      <div class="search-field">
+        <input
+          [(ngModel)]="searchQuery"
+          name="query"
+          type="text"
+          placeholder="Search shampoo, soap, toothpaste..."
+          autocomplete="off"
+          (input)="updateSuggestions()"
+          (focus)="updateSuggestions()"
+          (keydown)="onSearchKeydown($event)"
+          (blur)="hideSuggestions()"
+        />
+        <div class="suggestions" *ngIf="showSuggestions">
+          <button
+            class="suggestion-item"
+            type="button"
+            *ngFor="let suggestion of suggestions"
+            (click)="selectSuggestion(suggestion)"
+            [class.active]="suggestions[highlightedIndex]?.id === suggestion.id"
+          >
+            <span>{{ suggestion.name }}</span>
+            <span class="tag">{{ suggestion.category }}</span>
+          </button>
+        </div>
+      </div>
+      <button type="submit">Search</button>
+    </form>
+    <div class="nav-actions">
+      <a class="pill" routerLink="/cart">Cart</a>
+      <a class="pill user-pill" *ngIf="currentUser" routerLink="/profile">
+        {{ currentUser.username }} ({{ currentUser.role }})
+      </a>
+      <button class="pill" type="button" *ngIf="currentUser?.role === 'ADMIN'" (click)="openAddModal()">
+        Add product
+      </button>
+      <button class="pill" type="button" *ngIf="currentUser" (click)="logout()">Logout</button>
+      <a class="pill" routerLink="/login" *ngIf="!currentUser">Sign in</a>
+    </div>
+  </div>
+ </header>
+
+<main>
+  <section class="hero fade-in">
+    <div>
+      <h1>Daily hygiene essentials, curated for comfort.</h1>
+      <p>Stock up on clean, skin-friendly products. Fast delivery, trusted brands, and gentle formulas.</p>
+      <button class="btn btn-primary" (click)="onSearch()">Browse products</button>
+    </div>
+    <div class="hero-card">
+      <span class="tag">Featured</span>
+      <strong>Clean Care Kit</strong>
+      <span>Everyday essentials in one bundle.</span>
+    </div>
+  </section>
+
+  <div class="modal-backdrop" *ngIf="panelProduct" (click)="onBackdropClose($event)">
+    <section class="product-panel modal">
+      <img [src]="panelProduct.imageUrl || placeholderImage" [alt]="panelProduct.name" (error)="onImageError($event)" />
+      <div>
+        <h2>{{ panelProduct.name }}</h2>
+        <p class="status">{{ panelProduct.description }}</p>
+        <div class="price">{{ panelProduct.currency }} {{ panelProduct.price }}</div>
+        <div class="actions">
+          <button class="btn btn-primary" (click)="addToCart(panelProduct.id)">Add to cart</button>
+          <button class="btn btn-ghost" (click)="hidePanel()">Close</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section>
+    <h2>Products</h2>
+    <div class="category-bar" *ngIf="categories.length">
+      <button
+        class="chip"
+        [class.active]="selectedCategory === category"
+        *ngFor="let category of categories"
+        (click)="selectCategory(category)"
+      >
+        {{ category }}
+      </button>
+    </div>
+    <p class="status" *ngIf="statusText">{{ statusText }}</p>
+    <div class="grid">
+      <div class="card" *ngFor="let product of displayedProducts">
+        <img [src]="product.imageUrl || placeholderImage" [alt]="product.name" (error)="onImageError($event)" />
+        <div class="card-body">
+          <strong>{{ product.name }}</strong>
+          <span class="status">{{ product.category }}</span>
+          <span class="price">{{ product.currency }} {{ product.price }}</span>
+          <div class="actions">
+            <button class="btn btn-primary" (click)="addToCart(product.id)">Add to cart</button>
+            <button class="btn btn-ghost" (click)="showPanel(product)">Details</button>
+            <button class="btn btn-ghost" *ngIf="currentUser?.role === 'ADMIN'" (click)="openEditModal(product)">Edit</button>
+            <button class="btn btn-ghost danger" *ngIf="currentUser?.role === 'ADMIN'" (click)="deleteProduct(product)">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="modal-backdrop" *ngIf="showAddModal">
+  <div class="modal">
+    <h3>Add product</h3>
+    <p class="status">Create a new hygiene product.</p>
+    <div class="form-grid">
+      <label>
+        Name
+        <input [(ngModel)]="addForm.name" type="text" />
+      </label>
+      <label>
+        Description
+        <textarea [(ngModel)]="addForm.description" rows="3"></textarea>
+      </label>
+      <label>
+        Price
+        <input [(ngModel)]="addForm.price" type="number" min="0.01" step="0.01" />
+      </label>
+      <label>
+        Currency
+        <input [(ngModel)]="addForm.currency" type="text" maxlength="3" />
+      </label>
+      <label>
+        Image URL
+        <input [(ngModel)]="addForm.imageUrl" type="text" />
+      </label>
+      <label>
+        Category
+        <input [(ngModel)]="addForm.category" type="text" />
+      </label>
+      <label>
+        SKU
+        <input [(ngModel)]="addForm.sku" type="text" />
+      </label>
+      <label>
+        Stock
+        <input [(ngModel)]="addForm.stockQuantity" type="number" min="0" />
+      </label>
+    </div>
+    <div class="error" *ngIf="addError">{{ addError }}</div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" type="button" (click)="closeAddModal()">Cancel</button>
+      <button class="btn btn-primary" type="button" (click)="submitProduct()">Add</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" *ngIf="showEditModal">
+  <div class="modal">
+    <h3>Edit product</h3>
+    <p class="status">Update product details.</p>
+    <div class="form-grid">
+      <label>
+        Name
+        <input [(ngModel)]="editForm.name" type="text" />
+      </label>
+      <label>
+        Description
+        <textarea [(ngModel)]="editForm.description" rows="3"></textarea>
+      </label>
+      <label>
+        Price
+        <input [(ngModel)]="editForm.price" type="number" min="0.01" step="0.01" />
+      </label>
+      <label>
+        Currency
+        <input [(ngModel)]="editForm.currency" type="text" maxlength="3" />
+      </label>
+      <label>
+        Image URL
+        <input [(ngModel)]="editForm.imageUrl" type="text" />
+      </label>
+      <label>
+        Category
+        <input [(ngModel)]="editForm.category" type="text" />
+      </label>
+      <label>
+        SKU
+        <input [(ngModel)]="editForm.sku" type="text" />
+      </label>
+      <label>
+        Stock
+        <input [(ngModel)]="editForm.stockQuantity" type="number" min="0" />
+      </label>
+    </div>
+    <div class="error" *ngIf="editError">{{ editError }}</div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" type="button" (click)="closeEditModal()">Cancel</button>
+      <button class="btn btn-primary" type="button" (click)="submitEdit()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" *ngIf="showToast" [class.error]="toastType === 'error'">
+  {{ toastMessage }}
+</div>

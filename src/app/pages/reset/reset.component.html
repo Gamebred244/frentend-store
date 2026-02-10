@@ -1,0 +1,14 @@
+<div class="page">
+  <div class="login-card">
+    <h1>Choose a new password</h1>
+    <p>Enter a new password to finish the reset.</p>
+    <form (ngSubmit)="submit()">
+      <label for="password">New password</label>
+      <input id="password" name="password" [(ngModel)]="newPassword" type="password" autocomplete="new-password" required />
+      <button type="submit" [disabled]="!token">Update password</button>
+    </form>
+    <div class="status" *ngIf="statusText">{{ statusText }}</div>
+    <div class="error" *ngIf="errorText">{{ errorText }}</div>
+    <div class="hint">Back to <a routerLink="/login">Sign in</a></div>
+  </div>
+</div>
