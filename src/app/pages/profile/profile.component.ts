@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthResponse, AuthService } from '../../services/auth.service';
+import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'app-profile',
@@ -8,9 +9,9 @@ import { AuthResponse, AuthService } from '../../services/auth.service';
 })
 export class ProfileComponent implements OnInit {
   currentUser: AuthResponse | null = null;
-  statusText = 'Loading profile...';
+  statusKey: string | null = 'PROFILE.STATUS.LOADING';
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private languageService: LanguageService) {}
 
   ngOnInit(): void {
     this.authService.currentUser$.subscribe((user) => {
@@ -19,12 +20,16 @@ export class ProfileComponent implements OnInit {
     this.authService.me().subscribe({
       next: (user) => {
         this.currentUser = user;
-        this.statusText = '';
+        this.statusKey = '';
       },
       error: () => {
         this.currentUser = null;
-        this.statusText = 'Please sign in to view your profile.';
+        this.statusKey = 'PROFILE.STATUS.NEED_SIGNIN';
       }
     });
+  }
+
+  changeLanguage(lang: string): void {
+    this.languageService.setLanguage(lang);
   }
 }

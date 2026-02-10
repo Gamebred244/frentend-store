@@ -17,6 +17,10 @@ export class ProductService {
     return this.http.get<Product[]>(url, { withCredentials: true });
   }
 
+  getProduct(id: number): Observable<Product> {
+    return this.http.get<Product>(`${this.apiUrl}/products/${id}`, { withCredentials: true });
+  }
+
   createProduct(payload: ProductRequest): Observable<Product> {
     return this.http.post<Product>(`${this.apiUrl}/products`, payload, { withCredentials: true });
   }

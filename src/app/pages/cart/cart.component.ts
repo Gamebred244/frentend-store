@@ -3,6 +3,7 @@ import { firstValueFrom } from 'rxjs';
 import { Cart } from '../../models/cart.model';
 import { AuthResponse, AuthService } from '../../services/auth.service';
 import { CartService } from '../../services/cart.service';
+import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'app-cart',
@@ -11,7 +12,8 @@ import { CartService } from '../../services/cart.service';
 })
 export class CartComponent implements OnInit {
   cart: Cart | null = null;
-  statusText = 'Loading cart...';
+  statusKey: string | null = 'CART.STATUS.LOADING';
+  isLoadingCart = false;
   currentUser: AuthResponse | null = null;
   placeholderImage = 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=600&q=80';
   showCheckout = false;
@@ -23,9 +25,13 @@ export class CartComponent implements OnInit {
     cvc: '',
     billingAddress: ''
   };
-  checkoutStatus = '';
+  checkoutStatusKey = '';
 
-  constructor(private cartService: CartService, private authService: AuthService) {}
+  constructor(
+    private cartService: CartService,
+    private authService: AuthService,
+    private languageService: LanguageService
+  ) {}
 
   ngOnInit(): void {
     this.loadCart();
@@ -37,11 +43,13 @@ export class CartComponent implements OnInit {
 
   async loadCart(): Promise<void> {
     try {
-      const cartId = await this.ensureCart();
-      this.cart = await firstValueFrom(this.cartService.getCart(cartId));
-      this.statusText = this.cart.items.length ? '' : 'Your cart is empty.';
+      this.isLoadingCart = true;
+      this.cart = await firstValueFrom(this.cartService.getCart());
+      this.statusKey = this.cart.items.length ? '' : 'CART.STATUS.EMPTY';
     } catch (error) {
-      this.statusText = 'Please sign in to view your cart.';
+      this.statusKey = 'CART.STATUS.NEED_SIGNIN';
+    } finally {
+      this.isLoadingCart = false;
     }
   }
 
@@ -53,7 +61,7 @@ export class CartComponent implements OnInit {
       await this.removeItem(itemId);
       return;
     }
-    await firstValueFrom(this.cartService.updateItem(this.cart.id, itemId, productId, quantity));
+    await firstValueFrom(this.cartService.updateItem(itemId, productId, quantity));
     await this.loadCart();
   }
 
@@ -61,12 +69,12 @@ export class CartComponent implements OnInit {
     if (!this.cart) {
       return;
     }
-    await firstValueFrom(this.cartService.removeItem(this.cart.id, itemId));
+    await firstValueFrom(this.cartService.removeItem(itemId));
     await this.loadCart();
   }
 
   openCheckout(): void {
-    this.checkoutStatus = '';
+    this.checkoutStatusKey = '';
     this.showCheckout = true;
   }
 
@@ -77,23 +85,17 @@ export class CartComponent implements OnInit {
   submitCheckout(): void {
     if (!this.checkout.fullName || !this.checkout.email || !this.checkout.cardNumber
       || !this.checkout.expiry || !this.checkout.cvc) {
-      this.checkoutStatus = 'Please fill all required card fields.';
+      this.checkoutStatusKey = 'CART.CHECKOUT.ERROR_REQUIRED';
       return;
     }
-    this.checkoutStatus = 'Payment submitted. (Demo only)';
+    this.checkoutStatusKey = 'CART.CHECKOUT.SUBMITTED';
     window.setTimeout(() => {
       this.showCheckout = false;
     }, 1400);
   }
 
-  private async ensureCart(): Promise<string> {
-    const existing = this.cartService.getCartId();
-    if (existing) {
-      return existing;
-    }
-    const cart = await firstValueFrom(this.cartService.createCart());
-    this.cartService.setCartId(cart.id);
-    return String(cart.id);
+  changeLanguage(lang: string): void {
+    this.languageService.setLanguage(lang);
   }
 
   onImageError(event: Event): void {

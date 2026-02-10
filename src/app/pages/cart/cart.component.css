@@ -1,42 +1,160 @@
-header {
-  position: sticky;
-  top: 0;
-  background: rgba(247, 242, 234, 0.92);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(20, 20, 20, 0.08);
+.hero-shell {
+  position: relative;
+  color: #fef9f2;
+  background:
+    linear-gradient(135deg, rgba(15, 42, 40, 0.96), rgba(18, 62, 55, 0.9)),
+    radial-gradient(circle at 10% 20%, rgba(240, 108, 79, 0.2), transparent 55%);
+  overflow: hidden;
+  padding-bottom: 26px;
+}
+
+.hero-shell::before,
+.hero-shell::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  opacity: 0.55;
+  z-index: 0;
+}
+
+.hero-shell::before {
+  width: 280px;
+  height: 280px;
+  top: -140px;
+  right: 10%;
+  background: radial-gradient(circle, rgba(240, 108, 79, 0.6), transparent 65%);
+}
+
+.hero-shell::after {
+  width: 220px;
+  height: 220px;
+  left: 6%;
+  bottom: -120px;
+  background: radial-gradient(circle, rgba(117, 229, 194, 0.4), transparent 65%);
 }
 
 .nav {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 16px 24px;
-  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 14px 32px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  justify-content: space-between;
+  gap: 16px;
+  background: linear-gradient(135deg, rgba(15, 42, 40, 0.92), rgba(18, 62, 55, 0.9));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
 }
 
 .brand {
   font-family: "Libre Baskerville", serif;
   font-size: 22px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
 }
 
-.pill {
-  padding: 8px 14px;
-  border-radius: 999px;
-  background: #fff;
-  border: 1px solid rgba(20, 20, 20, 0.12);
+.brand span {
+  color: #f06c4f;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lang-menu {
+  position: relative;
+}
+
+.lang-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: #ffffff;
+  color: #1f1f1f;
+  border-radius: 12px;
+  border: 1px solid rgba(15, 15, 20, 0.12);
+  box-shadow: var(--shadow);
+  padding: 6px;
+  display: grid;
+  gap: 4px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 10;
+  min-width: 140px;
+}
+
+.lang-menu:hover .lang-dropdown,
+.lang-menu:focus-within .lang-dropdown {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.lang-dropdown button {
+  border: none;
+  background: transparent;
+  padding: 8px 10px;
+  text-align: left;
+  border-radius: 8px;
   font-size: 13px;
+  cursor: pointer;
 }
 
-.user-pill {
-  background: rgba(10, 107, 90, 0.08);
-  border-color: rgba(10, 107, 90, 0.2);
+.lang-dropdown button:hover {
+  background: rgba(10, 107, 90, 0.1);
+}
+
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fef9f2;
+  display: grid;
+  place-items: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  cursor: pointer;
+  padding: 0;
+}
+
+.icon-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.icon-btn:hover,
+.icon-btn.active {
+  transform: translateY(-1px);
+  border-color: rgba(240, 108, 79, 0.5);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+}
+
+.icon-btn.danger {
+  border-color: rgba(185, 28, 28, 0.35);
+  color: #b91c1c;
+  background: rgba(185, 28, 28, 0.08);
+}
+
+.icon-btn.danger:hover {
+  border-color: rgba(185, 28, 28, 0.55);
+  box-shadow: 0 12px 25px rgba(185, 28, 28, 0.25);
 }
 
 main {
   max-width: 1100px;
-  margin: 40px auto;
-  padding: 0 24px;
+  margin: 0 auto;
+  padding: 120px 24px 40px;
   display: grid;
   gap: 24px;
 }
@@ -221,6 +339,15 @@ main {
 }
 
 @media (max-width: 800px) {
+  .nav {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .nav-actions {
+    justify-content: flex-start;
+  }
+
   .item {
     grid-template-columns: 1fr;
   }

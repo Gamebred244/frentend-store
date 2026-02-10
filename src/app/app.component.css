@@ -1,0 +1,97 @@
+.site-footer {
+  margin-top: 40px;
+  background: linear-gradient(135deg, rgba(15, 42, 40, 0.96), rgba(18, 62, 55, 0.9));
+  color: #fef9f2;
+  position: relative;
+  overflow: hidden;
+}
+
+.footer-glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 15% 50%, rgba(240, 108, 79, 0.22), transparent 55%),
+    radial-gradient(circle at 80% 20%, rgba(117, 229, 194, 0.25), transparent 50%);
+  opacity: 0.8;
+  animation: footerShift 10s ease-in-out infinite alternate;
+}
+
+.footer-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px 32px;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 18px;
+}
+
+.footer-brand {
+  font-family: "Libre Baskerville", serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 16px;
+}
+
+.footer-brand span {
+  color: #f06c4f;
+}
+
+.footer-links {
+  display: flex;
+  gap: 16px;
+}
+
+.footer-links a {
+  color: inherit;
+  text-decoration: none;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.8;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.footer-links a:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+.footer-copy {
+  font-size: 12px;
+  letter-spacing: 0.6px;
+  opacity: 0.8;
+}
+
+@keyframes footerShift {
+  from {
+    transform: translateX(-4%);
+  }
+  to {
+    transform: translateX(4%);
+  }
+}
+
+@media (max-width: 720px) {
+  .footer-inner {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .footer-links {
+    justify-content: center;
+  }
+}
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}

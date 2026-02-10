@@ -1,0 +1,59 @@
+<header class="hero-shell">
+  <div class="nav">
+    <a class="brand" routerLink="/">Hygiene<span>Market</span></a>
+    <div class="nav-spacer"></div>
+    <div class="nav-actions">
+      <a class="icon-btn" routerLink="/" title="Shop" aria-label="Shop">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M4 11l8-6 8 6v8a2 2 0 0 1-2 2h-4v-6H10v6H6a2 2 0 0 1-2-2z"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </a>
+      <a class="icon-btn" routerLink="/cart" title="Cart" aria-label="Cart">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M7 6h14l-2 9H8L6 4H3"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <circle cx="9" cy="20" r="1.5" fill="currentColor" />
+          <circle cx="18" cy="20" r="1.5" fill="currentColor" />
+        </svg>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="contact-card">
+    <div>
+      <p class="eyebrow">Support</p>
+      <h1>Contact us</h1>
+      <p class="desc">Tell us what you need and we will respond quickly.</p>
+    </div>
+    <form class="form-grid" (ngSubmit)="submit()">
+      <label>
+        Name
+        <input [(ngModel)]="form.name" name="name" type="text" />
+      </label>
+      <label>
+        Email
+        <input [(ngModel)]="form.email" name="email" type="email" />
+      </label>
+      <label>
+        Message
+        <textarea [(ngModel)]="form.message" name="message" rows="5"></textarea>
+      </label>
+      <div class="status" *ngIf="statusText">{{ statusText }}</div>
+      <button class="btn" type="submit" [disabled]="isSending">Send</button>
+    </form>
+  </section>
+</main>

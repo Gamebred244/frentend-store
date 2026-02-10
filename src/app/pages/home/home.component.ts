@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 import { Product, ProductRequest } from '../../models/product.model';
 import { AuthResponse, AuthService } from '../../services/auth.service';
 import { CartService } from '../../services/cart.service';
+import { LanguageService } from '../../services/language.service';
 import { ProductService } from '../../services/product.service';
 
 @Component({
@@ -13,14 +16,18 @@ import { ProductService } from '../../services/product.service';
 export class HomeComponent implements OnInit {
   products: Product[] = [];
   displayedProducts: Product[] = [];
+  pagedProducts: Product[] = [];
   categories: string[] = [];
   selectedCategory = 'All';
-  statusText = 'Loading products...';
+  statusKey: string | null = 'HOME.STATUS.LOADING';
+  isLoadingProducts = false;
+  currentPage = 1;
+  pageSize = 12;
+  totalPages = 1;
   searchQuery = '';
   suggestions: Product[] = [];
   showSuggestions = false;
   highlightedIndex = -1;
-  panelProduct: Product | null = null;
   currentUser: AuthResponse | null = null;
   placeholderImage = 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=600&q=80';
   showAddModal = false;
@@ -31,6 +38,7 @@ export class HomeComponent implements OnInit {
   toastType: 'success' | 'error' = 'success';
   showToast = false;
   editTargetId: number | null = null;
+  isNavCompact = false;
   addForm: ProductRequest = {
     name: '',
     description: '',
@@ -57,28 +65,45 @@ export class HomeComponent implements OnInit {
   constructor(
     private productService: ProductService,
     private cartService: CartService,
-    private authService: AuthService
+    private authService: AuthService,
+    private languageService: LanguageService,
+    private translate: TranslateService,
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.loadProducts();
+    this.route.queryParamMap.subscribe((params) => {
+      const query = params.get('q') || '';
+      this.searchQuery = query;
+      this.loadProducts(query || undefined);
+    });
     this.authService.currentUser$.subscribe((user) => {
       this.currentUser = user;
     });
     this.loadUser();
   }
 
+  @HostListener('window:scroll')
+  onWindowScroll(): void {
+    this.isNavCompact = window.scrollY > 40;
+  }
+
   loadProducts(query?: string): void {
-    this.statusText = 'Loading products...';
+    this.statusKey = 'HOME.STATUS.LOADING';
+    this.isLoadingProducts = true;
+    this.currentPage = 1;
     this.productService.getProducts(query).subscribe({
       next: (products) => {
         this.products = products;
         this.refreshCategories();
         this.applyFilters();
-        this.statusText = this.displayedProducts.length ? '' : 'No products found.';
+        this.statusKey = this.displayedProducts.length ? '' : 'HOME.STATUS.NO_RESULTS';
+        this.isLoadingProducts = false;
       },
       error: () => {
-        this.statusText = 'Unable to load products. Please sign in.';
+        this.statusKey = 'HOME.STATUS.NEED_SIGNIN';
+        this.isLoadingProducts = false;
       }
     });
   }
@@ -110,7 +135,7 @@ export class HomeComponent implements OnInit {
     this.searchQuery = product.name;
     this.showSuggestions = false;
     this.highlightedIndex = -1;
-    this.showPanel(product);
+    this.goToProduct(product.id);
   }
 
   onSearchKeydown(event: KeyboardEvent): void {
@@ -144,24 +169,18 @@ export class HomeComponent implements OnInit {
     }, 150);
   }
 
+  changeLanguage(lang: string): void {
+    this.languageService.setLanguage(lang);
+  }
+
   selectCategory(category: string): void {
     this.selectedCategory = category;
+    this.currentPage = 1;
     this.applyFilters();
   }
 
-  showPanel(product: Product): void {
-    this.panelProduct = product;
-  }
-
-  hidePanel(): void {
-    this.panelProduct = null;
-  }
-
-  onBackdropClose(event: MouseEvent): void {
-    const target = event.target as HTMLElement | null;
-    if (target && target.classList.contains('modal-backdrop')) {
-      this.hidePanel();
-    }
+  goToProduct(productId: number): void {
+    this.router.navigate(['/product', productId]);
   }
 
   onImageError(event: Event): void {
@@ -173,22 +192,17 @@ export class HomeComponent implements OnInit {
 
   async addToCart(productId: number): Promise<void> {
     try {
-      const cartId = await this.ensureCart();
-      await firstValueFrom(this.cartService.addItem(cartId, productId, 1));
-      this.showToastMessage('Added to cart.', 'success');
-    } catch (error) {
-      this.showToastMessage('Please sign in as user to add items.', 'error');
+      await firstValueFrom(this.cartService.addItem(productId, 1));
+      this.showToastMessage(this.translate.instant('HOME.TOAST.ADDED'), 'success');
+    } catch (error: any) {
+      const status = error?.status;
+      const fallback = this.translate.instant('HOME.TOAST.ADD_FAILED');
+      const message =
+        status === 401 || status === 403
+          ? this.translate.instant('HOME.TOAST.SIGN_IN')
+          : error?.error?.message || fallback;
+      this.showToastMessage(message, 'error');
     }
-  }
-
-  private async ensureCart(): Promise<string> {
-    const existing = this.cartService.getCartId();
-    if (existing) {
-      return existing;
-    }
-    const cart = await firstValueFrom(this.cartService.createCart());
-    this.cartService.setCartId(cart.id);
-    return String(cart.id);
   }
 
   loadUser(): void {
@@ -230,7 +244,7 @@ export class HomeComponent implements OnInit {
   submitProduct(): void {
     this.addError = '';
     if (!this.addForm.name || !this.addForm.description || !this.addForm.imageUrl || this.addForm.price <= 0) {
-      this.addError = 'Name, description, image, and price are required.';
+      this.addError = this.translate.instant('HOME.ERRORS.REQUIRED_FIELDS');
       return;
     }
     this.productService.createProduct(this.addForm).subscribe({
@@ -241,7 +255,7 @@ export class HomeComponent implements OnInit {
         this.showAddModal = false;
       },
       error: (error) => {
-        this.addError = error?.error?.message || 'Unable to add product.';
+        this.addError = error?.error?.message || this.translate.instant('HOME.ERRORS.ADD_FAILED');
       }
     });
   }
@@ -274,7 +288,7 @@ export class HomeComponent implements OnInit {
     }
     this.editError = '';
     if (!this.editForm.name || !this.editForm.description || !this.editForm.imageUrl || this.editForm.price <= 0) {
-      this.editError = 'Name, description, image, and price are required.';
+      this.editError = this.translate.instant('HOME.ERRORS.REQUIRED_FIELDS');
       return;
     }
     this.productService.updateProduct(this.editTargetId, this.editForm).subscribe({
@@ -285,13 +299,13 @@ export class HomeComponent implements OnInit {
         this.closeEditModal();
       },
       error: (error) => {
-        this.editError = error?.error?.message || 'Unable to update product.';
+        this.editError = error?.error?.message || this.translate.instant('HOME.ERRORS.UPDATE_FAILED');
       }
     });
   }
 
   deleteProduct(product: Product): void {
-    if (!confirm(`Delete ${product.name}?`)) {
+    if (!confirm(this.translate.instant('HOME.CONFIRM.DELETE', { name: product.name }))) {
       return;
     }
     this.productService.deleteProduct(product.id).subscribe({
@@ -323,10 +337,36 @@ export class HomeComponent implements OnInit {
   private applyFilters(): void {
     if (this.selectedCategory === 'All') {
       this.displayedProducts = [...this.products];
+    } else {
+      this.displayedProducts = this.products.filter(
+        (product) => product.category === this.selectedCategory
+      );
+    }
+    this.updatePagination();
+  }
+
+  private updatePagination(): void {
+    this.totalPages = Math.max(1, Math.ceil(this.displayedProducts.length / this.pageSize));
+    if (this.currentPage > this.totalPages) {
+      this.currentPage = this.totalPages;
+    }
+    const start = (this.currentPage - 1) * this.pageSize;
+    this.pagedProducts = this.displayedProducts.slice(start, start + this.pageSize);
+  }
+
+  goToPage(page: number): void {
+    if (page < 1 || page > this.totalPages) {
       return;
     }
-    this.displayedProducts = this.products.filter(
-      (product) => product.category === this.selectedCategory
-    );
+    this.currentPage = page;
+    this.updatePagination();
+  }
+
+  nextPage(): void {
+    this.goToPage(this.currentPage + 1);
+  }
+
+  prevPage(): void {
+    this.goToPage(this.currentPage - 1);
   }
 }

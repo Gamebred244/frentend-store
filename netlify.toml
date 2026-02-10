@@ -1,0 +1,13 @@
+[build]
+  command = "npm run build -- --configuration production"
+  publish = "dist/frontend-store"
+
+[[redirects]]
+  from = "/api/*"
+  to = "https://YOUR_BACKEND_URL/api/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

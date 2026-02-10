@@ -1,7 +1,34 @@
 <header class="hero-shell">
   <div class="nav">
     <a class="brand" routerLink="/">Hygiene<span>Market</span></a>
-    <div class="nav-spacer"></div>
+    <form class="search" (submit)="onSearch()" autocomplete="off">
+      <div class="search-field">
+        <input
+          [(ngModel)]="searchQuery"
+          name="query"
+          type="text"
+          [placeholder]="'HOME.SEARCH.PLACEHOLDER' | translate"
+          autocomplete="off"
+          (input)="updateSuggestions()"
+          (focus)="updateSuggestions()"
+          (keydown)="onSearchKeydown($event)"
+          (blur)="hideSuggestions()"
+        />
+        <div class="suggestions" *ngIf="showSuggestions">
+          <button
+            class="suggestion-item"
+            type="button"
+            *ngFor="let suggestion of suggestions"
+            (click)="selectSuggestion(suggestion)"
+            [class.active]="suggestions[highlightedIndex]?.id === suggestion.id"
+          >
+            <span>{{ suggestion.name }}</span>
+            <span class="tag">{{ suggestion.category }}</span>
+          </button>
+        </div>
+      </div>
+      <button type="submit">{{ 'HOME.SEARCH.BUTTON' | translate }}</button>
+    </form>
     <div class="nav-actions">
       <div class="lang-menu" [attr.title]="'NAV.LANGUAGE' | translate">
         <button class="icon-btn" type="button" [attr.aria-label]="'NAV.LANGUAGE' | translate">
@@ -34,7 +61,7 @@
           />
         </svg>
       </a>
-      <a class="icon-btn active" routerLink="/cart" [attr.title]="'NAV.CART' | translate" [attr.aria-label]="'NAV.CART' | translate">
+      <a class="icon-btn" routerLink="/cart" [attr.title]="'NAV.CART' | translate" [attr.aria-label]="'NAV.CART' | translate">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path
             d="M7 6h14l-2 9H8L6 4H3"
@@ -119,92 +146,71 @@
 </header>
 
 <main>
-  <section>
-    <h1>{{ 'CART.TITLE' | translate }}</h1>
-    <div class="spinner-wrap" *ngIf="isLoadingCart">
-      <div class="spinner" aria-hidden="true"></div>
+  <nav class="breadcrumb" aria-label="Breadcrumb" *ngIf="product">
+    <a routerLink="/">{{ 'NAV.SHOP' | translate }}</a>
+    <span>/</span>
+    <a routerLink="/">{{ 'PRODUCT.BREADCRUMB_PRODUCTS' | translate }}</a>
+    <span>/</span>
+    <a [routerLink]="['/']" [queryParams]="{ q: product.category }">{{ product.category }}</a>
+    <span>/</span>
+    <span class="current">{{ product.name }}</span>
+  </nav>
+  <div class="spinner-wrap" *ngIf="isLoadingProduct">
+    <div class="spinner" aria-hidden="true"></div>
+  </div>
+  <section class="detail-card" *ngIf="product && !isLoadingProduct">
+    <div class="image-panel">
+      <img
+        [src]="product.imageUrl || placeholderImage"
+        [alt]="product.name"
+        (error)="onImageError($event)"
+      />
     </div>
-    <p class="muted" *ngIf="statusKey && !isLoadingCart">{{ statusKey | translate }}</p>
-  </section>
-
-  <section class="cart-grid" *ngIf="cart">
-    <div class="item" *ngFor="let item of cart.items">
-      <img [src]="item.imageUrl || placeholderImage" [alt]="item.productName" (error)="onImageError($event)" />
-      <div class="item-info">
-        <strong>{{ item.productName }}</strong>
-        <span class="muted">{{ 'CART.UNIT' | translate }}: {{ cart.currency }} {{ item.unitPrice }}</span>
-        <span class="muted">{{ 'CART.LINE' | translate }}: {{ cart.currency }} {{ item.lineTotal }}</span>
-      </div>
-      <div class="item-actions">
-        <div class="qty">
-          <button type="button" (click)="updateQty(item.id, item.productId, item.quantity - 1)">-</button>
-          <span>{{ item.quantity }}</span>
-          <button type="button" (click)="updateQty(item.id, item.productId, item.quantity + 1)">+</button>
+    <div class="info-panel">
+      <p class="eyebrow">{{ product.category }}</p>
+      <h1>{{ product.name }}</h1>
+      <p class="desc">{{ product.description }}</p>
+      <div class="meta-grid">
+        <div>
+          <span class="label">{{ 'PRODUCT.PRICE' | translate }}</span>
+          <strong>{{ product.currency }} {{ product.price }}</strong>
         </div>
-        <button class="icon-btn danger" type="button" (click)="removeItem(item.id)" [attr.title]="'CART.REMOVE' | translate" [attr.aria-label]="'CART.REMOVE' | translate">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path
-              d="M4 7h16M9 7V5h6v2M7 7l1 12h8l1-12"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.6"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-        </button>
+        <div>
+          <span class="label">{{ 'PRODUCT.SKU' | translate }}</span>
+          <strong>{{ product.sku || '—' }}</strong>
+        </div>
+        <div>
+          <span class="label">{{ 'PRODUCT.CATEGORY' | translate }}</span>
+          <strong>{{ product.category }}</strong>
+        </div>
       </div>
+      <button class="btn btn-primary big" type="button" (click)="addToCart(product.id)">
+        {{ 'PRODUCT.ADD_TO_CART' | translate }}
+      </button>
     </div>
   </section>
 
-  <section class="summary" *ngIf="cart">
-    <div class="muted">{{ 'CART.TOTAL' | translate }}</div>
-    <strong>MAD {{ cart.total | number: '1.2-2' }}</strong>
-    <button class="btn" type="button" (click)="openCheckout()">{{ 'CART.CHECKOUT.TITLE' | translate }}</button>
+  <p class="status" *ngIf="statusKey && !isLoadingProduct">{{ statusKey | translate }}</p>
+
+  <section class="similar" *ngIf="similarProducts.length">
+    <div class="section-head">
+      <h2>{{ 'PRODUCT.SIMILAR' | translate }}</h2>
+    </div>
+    <div class="grid">
+      <div class="card" *ngFor="let item of similarProducts" (click)="goToProduct(item.id)">
+        <div class="card-media">
+          <img [src]="item.imageUrl || placeholderImage" [alt]="item.name" (error)="onImageError($event)" />
+        </div>
+        <div class="card-body">
+          <strong>{{ item.name }}</strong>
+          <span class="status">{{ item.category }}</span>
+          <span class="price">{{ item.currency }} {{ item.price }}</span>
+        </div>
+      </div>
+    </div>
   </section>
 </main>
 
-<div class="modal-backdrop" *ngIf="showCheckout">
-  <div class="modal">
-    <h2>{{ 'CART.CHECKOUT.TITLE' | translate }}</h2>
-    <p class="muted">{{ 'CART.CHECKOUT.SUBTITLE' | translate }}</p>
-    <div class="payment-options">
-      <span class="option">{{ 'CART.CHECKOUT.CARD_OPTION' | translate }}</span>
-    </div>
-
-    <div class="form-grid">
-      <label>
-        {{ 'FORM.FULL_NAME' | translate }}
-        <input [(ngModel)]="checkout.fullName" type="text" />
-      </label>
-      <label>
-        {{ 'FORM.EMAIL' | translate }}
-        <input [(ngModel)]="checkout.email" type="email" />
-      </label>
-      <label>
-        {{ 'FORM.CARD_NUMBER' | translate }}
-        <input [(ngModel)]="checkout.cardNumber" type="text" maxlength="19" placeholder="1234 5678 9012 3456" />
-      </label>
-      <div class="row">
-        <label>
-        {{ 'FORM.EXPIRY' | translate }}
-          <input [(ngModel)]="checkout.expiry" type="text" placeholder="MM/YY" />
-        </label>
-        <label>
-        {{ 'FORM.CVC' | translate }}
-          <input [(ngModel)]="checkout.cvc" type="text" maxlength="4" />
-        </label>
-      </div>
-      <label>
-        {{ 'FORM.BILLING_ADDRESS' | translate }}
-        <input [(ngModel)]="checkout.billingAddress" type="text" />
-      </label>
-    </div>
-
-    <div class="error" *ngIf="checkoutStatusKey">{{ checkoutStatusKey | translate }}</div>
-    <div class="modal-actions">
-      <button class="btn ghost" type="button" (click)="closeCheckout()">{{ 'COMMON.CANCEL' | translate }}</button>
-      <button class="btn" type="button" (click)="submitCheckout()">{{ 'CART.CHECKOUT.PAY' | translate }}</button>
-    </div>
-  </div>
+<div class="toast" *ngIf="showToast" [class.error]="toastType === 'error'">
+  {{ toastMessage }}
 </div>

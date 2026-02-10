@@ -1,0 +1,140 @@
+{
+  "NAV": {
+    "LANGUAGE": "Language",
+    "CART": "Cart",
+    "PROFILE": "Profile",
+    "LOGOUT": "Logout",
+    "ADD_PRODUCT": "Add product",
+    "SIGN_IN": "Sign in",
+    "SHOP": "Shop"
+  },
+  "LANG": {
+    "EN": "English",
+    "AR": "Arabic",
+    "FR": "French",
+    "ES": "Spanish"
+  },
+  "HOME": {
+    "SEARCH": {
+      "PLACEHOLDER": "Search shampoo, soap, toothpaste...",
+      "BUTTON": "Search"
+    },
+    "HERO": {
+      "EYEBROW": "Ritual of clean",
+      "TITLE": "Moroccan hygiene essentials, arranged like a gallery drop.",
+      "SUBTITLE": "Small rituals, big care. Discover oral, body, baby, and home essentials curated for Morocco.",
+      "CTA_PRIMARY": "Browse products",
+      "CTA_SECONDARY": "Seasonal picks",
+      "TILE_FRESH": "Fresh",
+      "TILE_SOFT": "Soft",
+      "TILE_DAILY": "Daily",
+      "TILE_CLEAN": "Clean"
+    },
+    "CATEGORIES": {
+      "TITLE": "Categories",
+      "SUBTITLE": "Tap a category to filter."
+    },
+    "PRODUCTS": {
+      "TITLE": "Products",
+      "ADD_TO_CART": "Add to cart",
+      "EDIT": "Edit",
+      "DELETE": "Delete"
+    },
+    "ADD": {
+      "TITLE": "Add product",
+      "SUBTITLE": "Create a new hygiene product."
+    },
+    "EDIT": {
+      "TITLE": "Edit product",
+      "SUBTITLE": "Update product details."
+    },
+    "STATUS": {
+      "LOADING": "Loading products...",
+      "NO_RESULTS": "No products found.",
+      "NEED_SIGNIN": "Unable to load products. Please sign in."
+    },
+    "TOAST": {
+      "ADDED": "Added to cart.",
+      "SIGN_IN": "Please sign in to add items.",
+      "ADD_FAILED": "Unable to add item right now."
+    },
+    "ERRORS": {
+      "REQUIRED_FIELDS": "Name, description, image, and price are required.",
+      "ADD_FAILED": "Unable to add product.",
+      "UPDATE_FAILED": "Unable to update product."
+    },
+    "CONFIRM": {
+      "DELETE": "Delete {{name}}?"
+    }
+  },
+  "CART": {
+    "TITLE": "Your Cart",
+    "UNIT": "Unit",
+    "LINE": "Line",
+    "REMOVE": "Remove",
+    "TOTAL": "Total",
+    "STATUS": {
+      "LOADING": "Loading cart...",
+      "EMPTY": "Your cart is empty.",
+      "NEED_SIGNIN": "Please sign in to view your cart."
+    },
+    "CHECKOUT": {
+      "TITLE": "Checkout",
+      "SUBTITLE": "Select a payment method and enter your details.",
+      "CARD_OPTION": "Mastercard / Visa",
+      "PAY": "Pay",
+      "ERROR_REQUIRED": "Please fill all required card fields.",
+      "SUBMITTED": "Payment submitted. (Demo only)"
+    }
+  },
+  "PROFILE": {
+    "TITLE": "Your Profile",
+    "USERNAME": "Username",
+    "EMAIL": "Email",
+    "ROLE": "Role",
+    "HINT": "Orders and address management can be added next.",
+    "STATUS": {
+      "LOADING": "Loading profile...",
+      "NEED_SIGNIN": "Please sign in to view your profile."
+    }
+  },
+  "PRODUCT": {
+    "PRICE": "Price",
+    "SKU": "SKU",
+    "CATEGORY": "Category",
+    "ADD_TO_CART": "Add to cart",
+    "SIMILAR": "Similar products",
+    "BREADCRUMB_PRODUCTS": "Products",
+    "STATUS": {
+      "LOADING": "Loading product...",
+      "NOT_FOUND": "Product not found."
+    },
+    "TOAST": {
+      "ADDED": "Added to cart.",
+      "SIGN_IN": "Please sign in to add items.",
+      "ADD_FAILED": "Unable to add item right now."
+    }
+  },
+  "FORM": {
+    "NAME": "Name",
+    "DESCRIPTION": "Description",
+    "PRICE": "Price",
+    "CURRENCY": "Currency",
+    "IMAGE_URL": "Image URL",
+    "CATEGORY": "Category",
+    "SKU": "SKU",
+    "STOCK": "Stock",
+    "FULL_NAME": "Full name",
+    "EMAIL": "Email",
+    "CARD_NUMBER": "Card number",
+    "EXPIRY": "Expiry",
+    "CVC": "CVC",
+    "BILLING_ADDRESS": "Billing address"
+  },
+  "COMMON": {
+    "CLOSE": "Close",
+    "CANCEL": "Cancel",
+    "ADD": "Add",
+    "SAVE": "Save"
+  }
+}

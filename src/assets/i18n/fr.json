@@ -1,0 +1,140 @@
+{
+  "NAV": {
+    "LANGUAGE": "Langue",
+    "CART": "Panier",
+    "PROFILE": "Profil",
+    "LOGOUT": "Déconnexion",
+    "ADD_PRODUCT": "Ajouter un produit",
+    "SIGN_IN": "Se connecter",
+    "SHOP": "Boutique"
+  },
+  "LANG": {
+    "EN": "Anglais",
+    "AR": "Arabe",
+    "FR": "Français",
+    "ES": "Espagnol"
+  },
+  "HOME": {
+    "SEARCH": {
+      "PLACEHOLDER": "Rechercher shampooing, savon, dentifrice...",
+      "BUTTON": "Rechercher"
+    },
+    "HERO": {
+      "EYEBROW": "Rituel de propreté",
+      "TITLE": "Les essentiels d’hygiène au Maroc, présentés comme une collection.",
+      "SUBTITLE": "Petits rituels, grand soin. Découvrez les essentiels pour l’oral, le corps, le bébé et la maison.",
+      "CTA_PRIMARY": "Voir les produits",
+      "CTA_SECONDARY": "Sélection de saison",
+      "TILE_FRESH": "Frais",
+      "TILE_SOFT": "Doux",
+      "TILE_DAILY": "Quotidien",
+      "TILE_CLEAN": "Propre"
+    },
+    "CATEGORIES": {
+      "TITLE": "Catégories",
+      "SUBTITLE": "Appuyez sur une catégorie pour filtrer."
+    },
+    "PRODUCTS": {
+      "TITLE": "Produits",
+      "ADD_TO_CART": "Ajouter au panier",
+      "EDIT": "Modifier",
+      "DELETE": "Supprimer"
+    },
+    "ADD": {
+      "TITLE": "Ajouter un produit",
+      "SUBTITLE": "Créer un nouveau produit d’hygiène."
+    },
+    "EDIT": {
+      "TITLE": "Modifier le produit",
+      "SUBTITLE": "Mettre à jour les détails du produit."
+    },
+    "STATUS": {
+      "LOADING": "Chargement des produits...",
+      "NO_RESULTS": "Aucun produit trouvé.",
+      "NEED_SIGNIN": "Impossible de charger les produits. Veuillez vous connecter."
+    },
+    "TOAST": {
+      "ADDED": "Ajouté au panier.",
+      "SIGN_IN": "Connectez-vous pour ajouter des articles.",
+      "ADD_FAILED": "Impossible d’ajouter l’article pour le moment."
+    },
+    "ERRORS": {
+      "REQUIRED_FIELDS": "Le nom, la description, l’image et le prix sont requis.",
+      "ADD_FAILED": "Impossible d’ajouter le produit.",
+      "UPDATE_FAILED": "Impossible de mettre à jour le produit."
+    },
+    "CONFIRM": {
+      "DELETE": "Supprimer {{name}} ?"
+    }
+  },
+  "CART": {
+    "TITLE": "Votre panier",
+    "UNIT": "Unité",
+    "LINE": "Ligne",
+    "REMOVE": "Retirer",
+    "TOTAL": "Total",
+    "STATUS": {
+      "LOADING": "Chargement du panier...",
+      "EMPTY": "Votre panier est vide.",
+      "NEED_SIGNIN": "Connectez-vous pour voir votre panier."
+    },
+    "CHECKOUT": {
+      "TITLE": "Paiement",
+      "SUBTITLE": "Sélectionnez un moyen de paiement et entrez vos informations.",
+      "CARD_OPTION": "Mastercard / Visa",
+      "PAY": "Payer",
+      "ERROR_REQUIRED": "Veuillez remplir tous les champs de carte requis.",
+      "SUBMITTED": "Paiement envoyé. (Démo)"
+    }
+  },
+  "PROFILE": {
+    "TITLE": "Votre profil",
+    "USERNAME": "Nom d’utilisateur",
+    "EMAIL": "Email",
+    "ROLE": "Rôle",
+    "HINT": "La gestion des commandes et adresses peut être ajoutée ensuite.",
+    "STATUS": {
+      "LOADING": "Chargement du profil...",
+      "NEED_SIGNIN": "Connectez-vous pour voir votre profil."
+    }
+  },
+  "PRODUCT": {
+    "PRICE": "Prix",
+    "SKU": "SKU",
+    "CATEGORY": "Catégorie",
+    "ADD_TO_CART": "Ajouter au panier",
+    "SIMILAR": "Produits similaires",
+    "BREADCRUMB_PRODUCTS": "Produits",
+    "STATUS": {
+      "LOADING": "Chargement du produit...",
+      "NOT_FOUND": "Produit introuvable."
+    },
+    "TOAST": {
+      "ADDED": "Ajouté au panier.",
+      "SIGN_IN": "Connectez-vous pour ajouter des articles.",
+      "ADD_FAILED": "Impossible d’ajouter l’article pour le moment."
+    }
+  },
+  "FORM": {
+    "NAME": "Nom",
+    "DESCRIPTION": "Description",
+    "PRICE": "Prix",
+    "CURRENCY": "Devise",
+    "IMAGE_URL": "URL de l’image",
+    "CATEGORY": "Catégorie",
+    "SKU": "SKU",
+    "STOCK": "Stock",
+    "FULL_NAME": "Nom complet",
+    "EMAIL": "Email",
+    "CARD_NUMBER": "Numéro de carte",
+    "EXPIRY": "Expiration",
+    "CVC": "CVC",
+    "BILLING_ADDRESS": "Adresse de facturation"
+  },
+  "COMMON": {
+    "CLOSE": "Fermer",
+    "CANCEL": "Annuler",
+    "ADD": "Ajouter",
+    "SAVE": "Enregistrer"
+  }
+}

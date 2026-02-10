@@ -1,5 +1,5 @@
-<header>
-  <div class="nav">
+<header class="hero-shell">
+  <div class="nav" [class.nav-compact]="isNavCompact">
     <a class="brand" routerLink="/">Hygiene<span>Market</span></a>
     <form class="search" (submit)="onSearch()" autocomplete="off">
       <div class="search-field">
@@ -7,7 +7,7 @@
           [(ngModel)]="searchQuery"
           name="query"
           type="text"
-          placeholder="Search shampoo, soap, toothpaste..."
+          [placeholder]="'HOME.SEARCH.PLACEHOLDER' | translate"
           autocomplete="off"
           (input)="updateSuggestions()"
           (focus)="updateSuggestions()"
@@ -27,56 +27,149 @@
           </button>
         </div>
       </div>
-      <button type="submit">Search</button>
+      <button type="submit">{{ 'HOME.SEARCH.BUTTON' | translate }}</button>
     </form>
     <div class="nav-actions">
-      <a class="pill" routerLink="/cart">Cart</a>
-      <a class="pill user-pill" *ngIf="currentUser" routerLink="/profile">
-        {{ currentUser.username }} ({{ currentUser.role }})
-      </a>
-      <button class="pill" type="button" *ngIf="currentUser?.role === 'ADMIN'" (click)="openAddModal()">
-        Add product
-      </button>
-      <button class="pill" type="button" *ngIf="currentUser" (click)="logout()">Logout</button>
-      <a class="pill" routerLink="/login" *ngIf="!currentUser">Sign in</a>
-    </div>
-  </div>
- </header>
-
-<main>
-  <section class="hero fade-in">
-    <div>
-      <h1>Daily hygiene essentials, curated for comfort.</h1>
-      <p>Stock up on clean, skin-friendly products. Fast delivery, trusted brands, and gentle formulas.</p>
-      <button class="btn btn-primary" (click)="onSearch()">Browse products</button>
-    </div>
-    <div class="hero-card">
-      <span class="tag">Featured</span>
-      <strong>Clean Care Kit</strong>
-      <span>Everyday essentials in one bundle.</span>
-    </div>
-  </section>
-
-  <div class="modal-backdrop" *ngIf="panelProduct" (click)="onBackdropClose($event)">
-    <section class="product-panel modal">
-      <img [src]="panelProduct.imageUrl || placeholderImage" [alt]="panelProduct.name" (error)="onImageError($event)" />
-      <div>
-        <h2>{{ panelProduct.name }}</h2>
-        <p class="status">{{ panelProduct.description }}</p>
-        <div class="price">{{ panelProduct.currency }} {{ panelProduct.price }}</div>
-        <div class="actions">
-          <button class="btn btn-primary" (click)="addToCart(panelProduct.id)">Add to cart</button>
-          <button class="btn btn-ghost" (click)="hidePanel()">Close</button>
+      <div class="lang-menu" [attr.title]="'NAV.LANGUAGE' | translate">
+        <button class="icon-btn" type="button" [attr.aria-label]="'NAV.LANGUAGE' | translate">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6" />
+            <path
+              d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.4"
+              stroke-linecap="round"
+            />
+          </svg>
+        </button>
+        <div class="lang-dropdown">
+          <button type="button" (click)="changeLanguage('en')">{{ 'LANG.EN' | translate }}</button>
+          <button type="button" (click)="changeLanguage('ar')">{{ 'LANG.AR' | translate }}</button>
+          <button type="button" (click)="changeLanguage('fr')">{{ 'LANG.FR' | translate }}</button>
+          <button type="button" (click)="changeLanguage('es')">{{ 'LANG.ES' | translate }}</button>
         </div>
       </div>
-    </section>
+      <a class="icon-btn" routerLink="/cart" [attr.title]="'NAV.CART' | translate" [attr.aria-label]="'NAV.CART' | translate">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M7 6h14l-2 9H8L6 4H3"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <circle cx="9" cy="20" r="1.5" fill="currentColor" />
+          <circle cx="18" cy="20" r="1.5" fill="currentColor" />
+        </svg>
+      </a>
+      <a class="icon-btn" routerLink="/profile" *ngIf="currentUser" [attr.title]="'NAV.PROFILE' | translate" [attr.aria-label]="'NAV.PROFILE' | translate">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle
+            cx="12"
+            cy="8"
+            r="4"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+          />
+          <path
+            d="M4 20c1.6-3 4.6-5 8-5s6.4 2 8 5"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+      </a>
+      <button class="icon-btn" type="button" *ngIf="currentUser" (click)="logout()" [attr.title]="'NAV.LOGOUT' | translate" [attr.aria-label]="'NAV.LOGOUT' | translate">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M9 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+          <path
+            d="M16 16l4-4-4-4"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M20 12H9"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+      <button class="icon-btn" type="button" *ngIf="currentUser?.role === 'ADMIN'" (click)="openAddModal()" [attr.title]="'NAV.ADD_PRODUCT' | translate" [attr.aria-label]="'NAV.ADD_PRODUCT' | translate">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M12 5v14M5 12h14"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+      <a class="icon-btn" routerLink="/login" *ngIf="!currentUser" [attr.title]="'NAV.SIGN_IN' | translate" [attr.aria-label]="'NAV.SIGN_IN' | translate">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect
+            x="3"
+            y="11"
+            width="18"
+            height="9"
+            rx="2"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+          />
+          <path
+            d="M7 11V8a5 5 0 0 1 10 0v3"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+      </a>
+    </div>
   </div>
 
-  <section>
-    <h2>Products</h2>
-    <div class="category-bar" *ngIf="categories.length">
+  <div class="hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow">{{ 'HOME.HERO.EYEBROW' | translate }}</p>
+      <h1>{{ 'HOME.HERO.TITLE' | translate }}</h1>
+      <p>{{ 'HOME.HERO.SUBTITLE' | translate }}</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary" (click)="onSearch()">{{ 'HOME.HERO.CTA_PRIMARY' | translate }}</button>
+        <button class="btn btn-ghost" type="button">{{ 'HOME.HERO.CTA_SECONDARY' | translate }}</button>
+      </div>
+    </div>
+    <div class="hero-tiles">
+      <div class="tile">{{ 'HOME.HERO.TILE_FRESH' | translate }}</div>
+      <div class="tile">{{ 'HOME.HERO.TILE_SOFT' | translate }}</div>
+      <div class="tile">{{ 'HOME.HERO.TILE_DAILY' | translate }}</div>
+      <div class="tile">{{ 'HOME.HERO.TILE_CLEAN' | translate }}</div>
+    </div>
+  </div>
+</header>
+
+<main class="layout">
+  <aside class="sidebar">
+    <h3>{{ 'HOME.CATEGORIES.TITLE' | translate }}</h3>
+    <p class="status">{{ 'HOME.CATEGORIES.SUBTITLE' | translate }}</p>
+    <div class="category-list">
       <button
-        class="chip"
+        class="category-item"
         [class.active]="selectedCategory === category"
         *ngFor="let category of categories"
         (click)="selectCategory(category)"
@@ -84,114 +177,148 @@
         {{ category }}
       </button>
     </div>
-    <p class="status" *ngIf="statusText">{{ statusText }}</p>
+  </aside>
+
+  <section class="content">
+    <div class="section-head">
+      <h2>{{ 'HOME.PRODUCTS.TITLE' | translate }}</h2>
+      <span class="status">{{ selectedCategory }}</span>
+    </div>
+    <div class="spinner-wrap" *ngIf="isLoadingProducts">
+      <div class="spinner" aria-hidden="true"></div>
+    </div>
+    <p class="status" *ngIf="statusKey && !isLoadingProducts">{{ statusKey | translate }}</p>
     <div class="grid">
-      <div class="card" *ngFor="let product of displayedProducts">
-        <img [src]="product.imageUrl || placeholderImage" [alt]="product.name" (error)="onImageError($event)" />
+      <div class="card" *ngFor="let product of pagedProducts" (click)="goToProduct(product.id)">
+        <div class="card-media">
+          <img [src]="product.imageUrl || placeholderImage" [alt]="product.name" (error)="onImageError($event)" />
+        </div>
         <div class="card-body">
           <strong>{{ product.name }}</strong>
           <span class="status">{{ product.category }}</span>
           <span class="price">{{ product.currency }} {{ product.price }}</span>
           <div class="actions">
-            <button class="btn btn-primary" (click)="addToCart(product.id)">Add to cart</button>
-            <button class="btn btn-ghost" (click)="showPanel(product)">Details</button>
-            <button class="btn btn-ghost" *ngIf="currentUser?.role === 'ADMIN'" (click)="openEditModal(product)">Edit</button>
-            <button class="btn btn-ghost danger" *ngIf="currentUser?.role === 'ADMIN'" (click)="deleteProduct(product)">Delete</button>
+            <button class="btn btn-primary btn-wide" (click)="addToCart(product.id); $event.stopPropagation()">
+              {{ 'HOME.PRODUCTS.ADD_TO_CART' | translate }}
+            </button>
+            <button class="btn btn-ghost" *ngIf="currentUser?.role === 'ADMIN'" (click)="openEditModal(product); $event.stopPropagation()">
+              {{ 'HOME.PRODUCTS.EDIT' | translate }}
+            </button>
+            <button class="btn btn-ghost danger" *ngIf="currentUser?.role === 'ADMIN'" (click)="deleteProduct(product); $event.stopPropagation()">
+              {{ 'HOME.PRODUCTS.DELETE' | translate }}
+            </button>
           </div>
         </div>
       </div>
+    </div>
+    <div class="pagination" *ngIf="totalPages > 1">
+      <button class="page-btn" type="button" (click)="prevPage()" [disabled]="currentPage === 1">
+        ‹
+      </button>
+      <button
+        class="page-btn"
+        type="button"
+        *ngFor="let page of [].constructor(totalPages); let i = index"
+        (click)="goToPage(i + 1)"
+        [class.active]="currentPage === i + 1"
+      >
+        {{ i + 1 }}
+      </button>
+      <button class="page-btn" type="button" (click)="nextPage()" [disabled]="currentPage === totalPages">
+        ›
+      </button>
     </div>
   </section>
 </main>
 
 <div class="modal-backdrop" *ngIf="showAddModal">
   <div class="modal">
-    <h3>Add product</h3>
-    <p class="status">Create a new hygiene product.</p>
+    <h3>{{ 'HOME.ADD.TITLE' | translate }}</h3>
+    <p class="status">{{ 'HOME.ADD.SUBTITLE' | translate }}</p>
     <div class="form-grid">
       <label>
-        Name
+        {{ 'FORM.NAME' | translate }}
         <input [(ngModel)]="addForm.name" type="text" />
       </label>
       <label>
-        Description
+        {{ 'FORM.DESCRIPTION' | translate }}
         <textarea [(ngModel)]="addForm.description" rows="3"></textarea>
       </label>
       <label>
-        Price
+        {{ 'FORM.PRICE' | translate }}
         <input [(ngModel)]="addForm.price" type="number" min="0.01" step="0.01" />
       </label>
       <label>
-        Currency
+        {{ 'FORM.CURRENCY' | translate }}
         <input [(ngModel)]="addForm.currency" type="text" maxlength="3" />
       </label>
       <label>
-        Image URL
+        {{ 'FORM.IMAGE_URL' | translate }}
         <input [(ngModel)]="addForm.imageUrl" type="text" />
       </label>
       <label>
-        Category
+        {{ 'FORM.CATEGORY' | translate }}
         <input [(ngModel)]="addForm.category" type="text" />
       </label>
       <label>
-        SKU
+        {{ 'FORM.SKU' | translate }}
         <input [(ngModel)]="addForm.sku" type="text" />
       </label>
       <label>
-        Stock
+        {{ 'FORM.STOCK' | translate }}
         <input [(ngModel)]="addForm.stockQuantity" type="number" min="0" />
       </label>
     </div>
     <div class="error" *ngIf="addError">{{ addError }}</div>
     <div class="modal-actions">
-      <button class="btn btn-ghost" type="button" (click)="closeAddModal()">Cancel</button>
-      <button class="btn btn-primary" type="button" (click)="submitProduct()">Add</button>
+      <button class="btn btn-ghost" type="button" (click)="closeAddModal()">{{ 'COMMON.CANCEL' | translate }}</button>
+      <button class="btn btn-primary" type="button" (click)="submitProduct()">{{ 'COMMON.ADD' | translate }}</button>
     </div>
   </div>
 </div>
 
 <div class="modal-backdrop" *ngIf="showEditModal">
   <div class="modal">
-    <h3>Edit product</h3>
-    <p class="status">Update product details.</p>
+    <h3>{{ 'HOME.EDIT.TITLE' | translate }}</h3>
+    <p class="status">{{ 'HOME.EDIT.SUBTITLE' | translate }}</p>
     <div class="form-grid">
       <label>
-        Name
+        {{ 'FORM.NAME' | translate }}
         <input [(ngModel)]="editForm.name" type="text" />
       </label>
       <label>
-        Description
+        {{ 'FORM.DESCRIPTION' | translate }}
         <textarea [(ngModel)]="editForm.description" rows="3"></textarea>
       </label>
       <label>
-        Price
+        {{ 'FORM.PRICE' | translate }}
         <input [(ngModel)]="editForm.price" type="number" min="0.01" step="0.01" />
       </label>
       <label>
-        Currency
+        {{ 'FORM.CURRENCY' | translate }}
         <input [(ngModel)]="editForm.currency" type="text" maxlength="3" />
       </label>
       <label>
-        Image URL
+        {{ 'FORM.IMAGE_URL' | translate }}
         <input [(ngModel)]="editForm.imageUrl" type="text" />
       </label>
       <label>
-        Category
+        {{ 'FORM.CATEGORY' | translate }}
         <input [(ngModel)]="editForm.category" type="text" />
       </label>
       <label>
-        SKU
+        {{ 'FORM.SKU' | translate }}
         <input [(ngModel)]="editForm.sku" type="text" />
       </label>
       <label>
-        Stock
+        {{ 'FORM.STOCK' | translate }}
         <input [(ngModel)]="editForm.stockQuantity" type="number" min="0" />
       </label>
     </div>
     <div class="error" *ngIf="editError">{{ editError }}</div>
     <div class="modal-actions">
-      <button class="btn btn-ghost" type="button" (click)="closeEditModal()">Cancel</button>
-      <button class="btn btn-primary" type="button" (click)="submitEdit()">Save</button>
+      <button class="btn btn-ghost" type="button" (click)="closeEditModal()">{{ 'COMMON.CANCEL' | translate }}</button>
+      <button class="btn btn-primary" type="button" (click)="submitEdit()">{{ 'COMMON.SAVE' | translate }}</button>
     </div>
   </div>
 </div>

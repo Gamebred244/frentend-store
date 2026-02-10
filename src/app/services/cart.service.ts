@@ -9,43 +9,30 @@ import { Cart } from '../models/cart.model';
 })
 export class CartService {
   private apiUrl = environment.apiUrl;
-  private cartKey = 'cartId';
 
   constructor(private http: HttpClient) {}
 
-  getCartId(): string | null {
-    return localStorage.getItem(this.cartKey);
+  getCart(): Observable<Cart> {
+    return this.http.get<Cart>(`${this.apiUrl}/carts/me`, { withCredentials: true });
   }
 
-  setCartId(cartId: number): void {
-    localStorage.setItem(this.cartKey, String(cartId));
-  }
-
-  createCart(): Observable<Cart> {
-    return this.http.post<Cart>(`${this.apiUrl}/carts`, {}, { withCredentials: true });
-  }
-
-  getCart(cartId: string | number): Observable<Cart> {
-    return this.http.get<Cart>(`${this.apiUrl}/carts/${cartId}`, { withCredentials: true });
-  }
-
-  addItem(cartId: string | number, productId: number, quantity: number): Observable<Cart> {
+  addItem(productId: number, quantity: number): Observable<Cart> {
     return this.http.post<Cart>(
-      `${this.apiUrl}/carts/${cartId}/items`,
+      `${this.apiUrl}/carts/me/items`,
       { productId, quantity },
       { withCredentials: true }
     );
   }
 
-  updateItem(cartId: string | number, itemId: number, productId: number, quantity: number): Observable<Cart> {
+  updateItem(itemId: number, productId: number, quantity: number): Observable<Cart> {
     return this.http.put<Cart>(
-      `${this.apiUrl}/carts/${cartId}/items/${itemId}`,
+      `${this.apiUrl}/carts/me/items/${itemId}`,
       { productId, quantity },
       { withCredentials: true }
     );
   }
 
-  removeItem(cartId: string | number, itemId: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/carts/${cartId}/items/${itemId}`, { withCredentials: true });
+  removeItem(itemId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/carts/me/items/${itemId}`, { withCredentials: true });
   }
 }

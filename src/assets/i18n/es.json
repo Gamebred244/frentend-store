@@ -1,0 +1,140 @@
+{
+  "NAV": {
+    "LANGUAGE": "Idioma",
+    "CART": "Carrito",
+    "PROFILE": "Perfil",
+    "LOGOUT": "Cerrar sesión",
+    "ADD_PRODUCT": "Agregar producto",
+    "SIGN_IN": "Iniciar sesión",
+    "SHOP": "Tienda"
+  },
+  "LANG": {
+    "EN": "Inglés",
+    "AR": "Árabe",
+    "FR": "Francés",
+    "ES": "Español"
+  },
+  "HOME": {
+    "SEARCH": {
+      "PLACEHOLDER": "Buscar champú, jabón, pasta dental...",
+      "BUTTON": "Buscar"
+    },
+    "HERO": {
+      "EYEBROW": "Ritual de limpieza",
+      "TITLE": "Esenciales de higiene en Marruecos, como una galería curada.",
+      "SUBTITLE": "Pequeños rituales, gran cuidado. Descubre esenciales para boca, cuerpo, bebé y hogar.",
+      "CTA_PRIMARY": "Ver productos",
+      "CTA_SECONDARY": "Selección de temporada",
+      "TILE_FRESH": "Fresco",
+      "TILE_SOFT": "Suave",
+      "TILE_DAILY": "Diario",
+      "TILE_CLEAN": "Limpio"
+    },
+    "CATEGORIES": {
+      "TITLE": "Categorías",
+      "SUBTITLE": "Toca una categoría para filtrar."
+    },
+    "PRODUCTS": {
+      "TITLE": "Productos",
+      "ADD_TO_CART": "Agregar al carrito",
+      "EDIT": "Editar",
+      "DELETE": "Eliminar"
+    },
+    "ADD": {
+      "TITLE": "Agregar producto",
+      "SUBTITLE": "Crea un nuevo producto de higiene."
+    },
+    "EDIT": {
+      "TITLE": "Editar producto",
+      "SUBTITLE": "Actualiza los detalles del producto."
+    },
+    "STATUS": {
+      "LOADING": "Cargando productos...",
+      "NO_RESULTS": "No se encontraron productos.",
+      "NEED_SIGNIN": "No se pueden cargar productos. Inicia sesión."
+    },
+    "TOAST": {
+      "ADDED": "Agregado al carrito.",
+      "SIGN_IN": "Inicia sesión para agregar artículos.",
+      "ADD_FAILED": "No se pudo agregar el artículo ahora."
+    },
+    "ERRORS": {
+      "REQUIRED_FIELDS": "Nombre, descripción, imagen y precio son obligatorios.",
+      "ADD_FAILED": "No se pudo agregar el producto.",
+      "UPDATE_FAILED": "No se pudo actualizar el producto."
+    },
+    "CONFIRM": {
+      "DELETE": "¿Eliminar {{name}}?"
+    }
+  },
+  "CART": {
+    "TITLE": "Tu carrito",
+    "UNIT": "Unidad",
+    "LINE": "Línea",
+    "REMOVE": "Quitar",
+    "TOTAL": "Total",
+    "STATUS": {
+      "LOADING": "Cargando carrito...",
+      "EMPTY": "Tu carrito está vacío.",
+      "NEED_SIGNIN": "Inicia sesión para ver tu carrito."
+    },
+    "CHECKOUT": {
+      "TITLE": "Pago",
+      "SUBTITLE": "Selecciona un método de pago e ingresa tus datos.",
+      "CARD_OPTION": "Mastercard / Visa",
+      "PAY": "Pagar",
+      "ERROR_REQUIRED": "Completa todos los campos requeridos de la tarjeta.",
+      "SUBMITTED": "Pago enviado. (Solo demo)"
+    }
+  },
+  "PROFILE": {
+    "TITLE": "Tu perfil",
+    "USERNAME": "Usuario",
+    "EMAIL": "Correo",
+    "ROLE": "Rol",
+    "HINT": "La gestión de pedidos y direcciones se puede agregar después.",
+    "STATUS": {
+      "LOADING": "Cargando perfil...",
+      "NEED_SIGNIN": "Inicia sesión para ver tu perfil."
+    }
+  },
+  "PRODUCT": {
+    "PRICE": "Precio",
+    "SKU": "SKU",
+    "CATEGORY": "Categoría",
+    "ADD_TO_CART": "Agregar al carrito",
+    "SIMILAR": "Productos similares",
+    "BREADCRUMB_PRODUCTS": "Productos",
+    "STATUS": {
+      "LOADING": "Cargando producto...",
+      "NOT_FOUND": "Producto no encontrado."
+    },
+    "TOAST": {
+      "ADDED": "Agregado al carrito.",
+      "SIGN_IN": "Inicia sesión para agregar artículos.",
+      "ADD_FAILED": "No se pudo agregar el artículo ahora."
+    }
+  },
+  "FORM": {
+    "NAME": "Nombre",
+    "DESCRIPTION": "Descripción",
+    "PRICE": "Precio",
+    "CURRENCY": "Moneda",
+    "IMAGE_URL": "URL de imagen",
+    "CATEGORY": "Categoría",
+    "SKU": "SKU",
+    "STOCK": "Stock",
+    "FULL_NAME": "Nombre completo",
+    "EMAIL": "Correo",
+    "CARD_NUMBER": "Número de tarjeta",
+    "EXPIRY": "Vencimiento",
+    "CVC": "CVC",
+    "BILLING_ADDRESS": "Dirección de facturación"
+  },
+  "COMMON": {
+    "CLOSE": "Cerrar",
+    "CANCEL": "Cancelar",
+    "ADD": "Agregar",
+    "SAVE": "Guardar"
+  }
+}
